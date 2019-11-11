@@ -29,6 +29,8 @@ trait ShopperLookup {
   }
 
   def createShopper(shopperId: Long) =
-    context.actorOf(Shopper.props(shopperId),
-      Shopper.name(shopperId))
+    context.actorOf(
+      Shopper.props(shopperId),
+      Shopper.name(shopperId)
+    )
 }

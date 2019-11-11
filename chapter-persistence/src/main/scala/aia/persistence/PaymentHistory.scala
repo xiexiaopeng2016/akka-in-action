@@ -5,7 +5,7 @@ import akka.persistence._
 
 import akka.persistence.query.PersistenceQuery
 import akka.persistence.query.journal.leveldb.scaladsl.LeveldbReadJournal
- 
+
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
 
@@ -28,7 +28,8 @@ class PaymentHistory(shopperId: Long) extends Actor
   import PaymentHistory._
 
   val queries = PersistenceQuery(context.system).readJournalFor[LeveldbReadJournal](
-    LeveldbReadJournal.Identifier)
+    LeveldbReadJournal.Identifier
+  )
   implicit val materializer = ActorMaterializer()
   queries.eventsByPersistenceId(Wallet.name(shopperId)).runWith(Sink.actorRef(self, None))
 

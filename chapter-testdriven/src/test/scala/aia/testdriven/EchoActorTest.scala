@@ -1,12 +1,12 @@
 package aia.testdriven
 
-import akka.testkit.{ TestKit, ImplicitSender }
-import akka.actor.{ Props, Actor, ActorSystem }
+import akka.testkit.{TestKit, ImplicitSender}
+import akka.actor.{Props, Actor, ActorSystem}
 import org.scalatest.WordSpecLike
 
 import akka.util.Timeout
 import scala.concurrent.Await
-import scala.util.{ Success, Failure }
+import scala.util.{Success, Failure}
 
 import scala.language.postfixOps
 
@@ -27,8 +27,8 @@ class EchoActorTest extends TestKit(ActorSystem("testsystem"))
       val echo = system.actorOf(Props[EchoActor], "echo1")
       val future = echo.ask("some message")
       future.onComplete {
-        case Failure(_)   => //handle failure
-        case Success(msg) => //handle success
+        case Failure(_) => //handle failure
+        case Success(msg) =>  //handle success
       }
 
       Await.ready(future, timeout.duration)
@@ -45,7 +45,7 @@ class EchoActorTest extends TestKit(ActorSystem("testsystem"))
 }
 
 
-class EchoActor extends Actor {
+class EchoActor extends Actor{
   def receive = {
     case msg =>
       sender() ! msg

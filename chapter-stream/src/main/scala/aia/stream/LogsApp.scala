@@ -1,24 +1,24 @@
 package aia.stream
 
-import java.nio.file.{ Files, FileSystems, Path }
+import java.nio.file.{Files, FileSystems, Path}
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
 import akka.NotUsed
-import akka.actor.{ ActorSystem , Actor, Props }
+import akka.actor.{ActorSystem, Actor, Props}
 import akka.event.Logging
 
-import akka.stream.{ ActorMaterializer, ActorMaterializerSettings, Supervision }
+import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
 
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
 import akka.http.scaladsl.server.Directives._
 
-import com.typesafe.config.{ Config, ConfigFactory }
+import com.typesafe.config.{Config, ConfigFactory}
 
 object LogsApp extends App {
 
-  val config = ConfigFactory.load() 
+  val config = ConfigFactory.load()
   val host = config.getString("http.host")
   val port = config.getInt("http.port")
 
@@ -28,28 +28,28 @@ object LogsApp extends App {
   }
   val maxLine = config.getInt("log-stream-processor.max-line")
 
-  implicit val system = ActorSystem() 
+  implicit val system = ActorSystem()
   implicit val ec = system.dispatcher
-  
-  val decider : Supervision.Decider = {
+
+  val decider: Supervision.Decider = {
     case _: LogStreamProcessor.LogParseException => Supervision.Stop
-    case _                    => Supervision.Stop
+    case _ => Supervision.Stop
   }
-  
+
   implicit val materializer = ActorMaterializer(
-   ActorMaterializerSettings(system)
-     .withSupervisionStrategy(decider)
+    ActorMaterializerSettings(system)
+      .withSupervisionStrategy(decider)
   )
-  
+
   val api = new LogsApi(logsDir, maxLine).routes
- 
+
   val bindingFuture: Future[ServerBinding] =
     Http().bindAndHandle(api, host, port)
- 
-  val log =  Logging(system.eventStream, "logs")
+
+  val log = Logging(system.eventStream, "logs")
   bindingFuture.map { serverBinding =>
     log.info(s"Bound to ${serverBinding.localAddress} ")
-  }.onFailure { 
+  }.onFailure {
     case ex: Exception =>
       log.error(ex, "Failed to bind to {}:{}!", host, port)
       system.terminate()

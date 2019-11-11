@@ -1,6 +1,5 @@
 package aia.persistence
 
-
 case class Items(list: List[Item]) {
   // more code for working with the item..
 
@@ -31,7 +30,7 @@ case class Item(productId: String, number: Int, unitPrice: BigDecimal) {
    * if productId of the item argument is equal to this item's productId
    */
   def aggregate(item: Item): Option[Item] = {
-   if(item.productId == productId) {
+    if (item.productId == productId) {
       Some(copy(number = number + item.number))
     } else {
       None
@@ -52,23 +51,24 @@ object Items {
     def grouped = indexed.groupBy {
       case (item, _) => item.productId
     }
-    def reduced = grouped.flatMap { case (_, groupedIndexed) =>
-      val init = (Option.empty[Item],Int.MaxValue)
-      val (item, ix) = groupedIndexed.foldLeft(init) {
-        case ((accItem, accIx), (item, ix)) =>
-          val aggregated =
-            accItem.map(i => item.aggregate(i))
-                   .getOrElse(Some(item))
+    def reduced = grouped.flatMap {
+      case (_, groupedIndexed) =>
+        val init = (Option.empty[Item], Int.MaxValue)
+        val (item, ix) = groupedIndexed.foldLeft(init) {
+          case ((accItem, accIx), (item, ix)) =>
+            val aggregated =
+              accItem.map(i => item.aggregate(i))
+                .getOrElse(Some(item))
 
-          (aggregated, Math.min(accIx, ix))
-      }
+            (aggregated, Math.min(accIx, ix))
+        }
 
-      item.filter(_.number > 0)
+        item.filter(_.number > 0)
           .map(i => (i, ix))
     }
     def sorted = reduced.toList
-     .sortBy { case (_, index) => index}
-     .map { case (item, _) => item}
+      .sortBy { case (_, index) => index }
+      .map { case (item, _) => item }
     sorted
   }
 }

@@ -8,15 +8,11 @@ import akka.dispatch.Dispatchers
 import akka.routing._
 
 
-case class PerformanceRoutingMessage(photo: String,
-                                     license: Option[String],
-                                     processedBy: Option[String])
-
+case class PerformanceRoutingMessage(photo: String, license: Option[String], processedBy: Option[String])
 
 case class SetService(id: String, serviceTime: FiniteDuration)
 
-class GetLicense(pipe: ActorRef, initialServiceTime: FiniteDuration = 0 millis)
-  extends Actor {
+class GetLicense(pipe: ActorRef, initialServiceTime: FiniteDuration = 0 millis) extends Actor {
   var id = self.path.name
   var serviceTime = initialServiceTime
 

@@ -3,18 +3,24 @@ package com.goticks
 import scala.concurrent.Future
 import com.github.nscala_time.time.Imports._
 import scala.util.control.NonFatal
+
 //what about timeout? or at least termination condition?
 // future -> actors scheduling time
 trait TicketInfoService extends WebServiceCalls {
+
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  type Recovery[T] = PartialFunction[Throwable,T]
+  type Recovery[T] = PartialFunction[Throwable, T]
 
   // recover with None
-  def withNone[T]: Recovery[Option[T]] = { case NonFatal(e) => None }
+  def withNone[T]: Recovery[Option[T]] = {
+    case NonFatal(e) => None
+  }
 
   // recover with empty sequence
-  def withEmptySeq[T]: Recovery[Seq[T]] = { case NonFatal(e) => Seq() }
+  def withEmptySeq[T]: Recovery[Seq[T]] = {
+    case NonFatal(e) => Seq()
+  }
 
   // recover with the ticketInfo that was built in the previous step
   def withPrevious(previous: TicketInfo): Recovery[TicketInfo] = {
@@ -44,18 +50,18 @@ trait TicketInfoService extends WebServiceCalls {
         val (travelAdvice, weather) = (elem.travelAdvice, elem.weather)
 
         acc.copy(travelAdvice = travelAdvice.orElse(acc.travelAdvice),
-                  weather = weather.orElse(acc.weather))
+          weather = weather.orElse(acc.weather))
       }
 
-      for(info <- infoWithTravelAndWeather;
-        suggestions <- suggestedEvents
+      for (info <- infoWithTravelAndWeather;
+           suggestions <- suggestedEvents
       ) yield info.copy(suggestions = suggestions)
     }
   }
 
   def getTraffic(ticketInfo: TicketInfo): Future[TicketInfo] = {
     ticketInfo.event.map { event =>
-      callTrafficService(ticketInfo.userLocation, event.location, event.time).map{ routeResponse =>
+      callTrafficService(ticketInfo.userLocation, event.location, event.time).map { routeResponse =>
         ticketInfo.copy(travelAdvice = Some(TravelAdvice(routeByCar = routeResponse)))
       }
     }.getOrElse(Future.successful(ticketInfo))
@@ -63,7 +69,7 @@ trait TicketInfoService extends WebServiceCalls {
 
   def getCarRoute(ticketInfo: TicketInfo): Future[TicketInfo] = {
     ticketInfo.event.map { event =>
-      callTrafficService(ticketInfo.userLocation, event.location, event.time).map{ routeResponse =>
+      callTrafficService(ticketInfo.userLocation, event.location, event.time).map { routeResponse =>
         val newTravelAdvice = ticketInfo.travelAdvice.map(_.copy(routeByCar = routeResponse))
         ticketInfo.copy(travelAdvice = newTravelAdvice)
       }.recover(withPrevious(ticketInfo))
@@ -72,7 +78,7 @@ trait TicketInfoService extends WebServiceCalls {
 
   def getPublicTransportAdvice(ticketInfo: TicketInfo): Future[TicketInfo] = {
     ticketInfo.event.map { event =>
-      callPublicTransportService(ticketInfo.userLocation, event.location, event.time).map{ publicTransportResponse =>
+      callPublicTransportService(ticketInfo.userLocation, event.location, event.time).map { publicTransportResponse =>
         val newTravelAdvice = ticketInfo.travelAdvice.map(_.copy(publicTransportAdvice = publicTransportResponse))
         ticketInfo.copy(travelAdvice = newTravelAdvice)
       }.recover(withPrevious(ticketInfo))
@@ -85,7 +91,7 @@ trait TicketInfoService extends WebServiceCalls {
 
     val futurePublicTransport = callPublicTransportService(info.userLocation, event.location, event.time).recover(withNone)
 
-    futureRoute.zip(futurePublicTransport).map { case(routeByCar, publicTransportAdvice) =>
+    futureRoute.zip(futurePublicTransport).map { case (routeByCar, publicTransportAdvice) =>
       val travelAdvice = TravelAdvice(routeByCar, publicTransportAdvice)
       info.copy(travelAdvice = Some(travelAdvice))
     }
@@ -104,13 +110,13 @@ trait TicketInfoService extends WebServiceCalls {
 
 
   def getPlannedEventsWithTraverse(event: Event, artists: Seq[Artist]): Future[Seq[Event]] = {
-    Future.traverse(artists) { artist=>
+    Future.traverse(artists) { artist =>
       callArtistCalendarService(artist, event.location)
     }
   }
 
   def getPlannedEvents(event: Event, artists: Seq[Artist]): Future[Seq[Event]] = {
-    val events = artists.map(artist=> callArtistCalendarService(artist, event.location))
+    val events = artists.map(artist => callArtistCalendarService(artist, event.location))
     Future.sequence(events)
   }
 
@@ -118,16 +124,16 @@ trait TicketInfoService extends WebServiceCalls {
 
     val futureArtists = callSimilarArtistsService(event).recover(withEmptySeq)
 
-    for(artists <- futureArtists.recover(withEmptySeq);
-        events <- getPlannedEvents(event, artists).recover(withEmptySeq)
+    for (artists <- futureArtists.recover(withEmptySeq);
+         events <- getPlannedEvents(event, artists).recover(withEmptySeq)
     ) yield events
   }
 
   def getSuggestionsWithFlatMapAndMap(event: Event): Future[Seq[Event]] = {
 
     val futureArtists = callSimilarArtistsService(event).recover(withEmptySeq)
-    futureArtists.flatMap { artists=>
-      Future.traverse(artists)(artist=> callArtistCalendarService(artist, event.location))
+    futureArtists.flatMap { artists =>
+      Future.traverse(artists)(artist => callArtistCalendarService(artist, event.location))
     }.recover(withEmptySeq)
   }
 
@@ -137,7 +143,7 @@ trait TicketInfoService extends WebServiceCalls {
 
     val futurePublicTransport = callPublicTransportService(info.userLocation, event.location, event.time).recover(withNone)
 
-    for((routeByCar, publicTransportAdvice) <- futureRoute.zip(futurePublicTransport);
+    for ((routeByCar, publicTransportAdvice) <- futureRoute.zip(futurePublicTransport);
          travelAdvice = TravelAdvice(routeByCar, publicTransportAdvice)
     ) yield info.copy(travelAdvice = Some(travelAdvice))
   }

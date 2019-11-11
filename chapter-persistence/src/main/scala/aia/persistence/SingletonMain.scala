@@ -10,8 +10,7 @@ import akka.util.Timeout
 import aia.persistence.rest.ShoppersServiceSupport
 
 object SingletonMain extends App with ShoppersServiceSupport {
-  implicit val system = ActorSystem("shoppers")
-  val shoppers = system.actorOf(ShoppersSingleton.props,
-   ShoppersSingleton.name)
-  startService(shoppers)
+	implicit val system = ActorSystem( "shoppers" )
+	val shoppers = system.actorOf( ShoppersSingleton.props, ShoppersSingleton.name )
+	startService( shoppers )
 }

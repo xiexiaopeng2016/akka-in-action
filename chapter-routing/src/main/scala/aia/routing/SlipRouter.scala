@@ -9,19 +9,15 @@ object CarOptions extends Enumeration {
 }
 
 case class Order(options: Seq[CarOptions.Value])
-case class Car(color: String = "",
-               hasNavigation: Boolean = false,
-               hasParkingSensors: Boolean = false)
+case class Car(color: String = "", hasNavigation: Boolean = false, hasParkingSensors: Boolean = false)
 
 
 
-case class RouteSlipMessage(routeSlip: Seq[ActorRef],
-                            message: AnyRef)
+case class RouteSlipMessage(routeSlip: Seq[ActorRef], message: AnyRef)
 
 trait RouteSlip {
 
-  def sendMessageToNextTask(routeSlip: Seq[ActorRef],
-                            message: AnyRef) {
+  def sendMessageToNextTask(routeSlip: Seq[ActorRef], message: AnyRef) {
     val nextTask = routeSlip.head
     val newSlip = routeSlip.tail
     if (newSlip.isEmpty) {
@@ -84,8 +80,7 @@ class SlipRouter(endStep: ActorRef) extends Actor with RouteSlip {
     }
   }
 
-  private def createRouteSlip(options: Seq[CarOptions.Value]):
-      Seq[ActorRef] = {
+  private def createRouteSlip(options: Seq[CarOptions.Value]): Seq[ActorRef] = {
 
     val routeSlip = new ListBuffer[ActorRef]
     //car needs a color

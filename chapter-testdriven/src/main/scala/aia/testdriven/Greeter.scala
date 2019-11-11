@@ -10,4 +10,3 @@ class Greeter extends Actor with ActorLogging {
     case Greeting(message) => log.info("Hello {}!", message)
   }
 }
-

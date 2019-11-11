@@ -1,6 +1,5 @@
 package aia.persistence
 
-
 import akka.actor._
 
 object Shopper {
@@ -21,12 +20,15 @@ class Shopper extends Actor {
 
   def shopperId = self.path.name.toLong
 
-  val basket = context.actorOf(Basket.props,
-    Basket.name(shopperId))
+  val basket = context.actorOf(
+    Basket.props,
+    Basket.name(shopperId)
+  )
 
-
-  val wallet = context.actorOf(Wallet.props(shopperId, cash),
-    Wallet.name(shopperId))
+  val wallet = context.actorOf(
+    Wallet.props(shopperId, cash),
+    Wallet.name(shopperId)
+  )
 
   def receive = {
     case cmd: Basket.Command => basket forward cmd
@@ -34,13 +36,11 @@ class Shopper extends Actor {
 
     case PayBasket(shopperId) => basket ! Basket.GetItems(shopperId)
     case Items(list) => wallet ! Wallet.Pay(list, shopperId)
-    case paid: Wallet.Paid => 
+    case paid: Wallet.Paid =>
       basket ! Basket.Clear(paid.shopperId)
       context.system.eventStream.publish(paid)
   }
 }
-
-
 
 // alternative PayBasket handling:
 // issue: ask timeout

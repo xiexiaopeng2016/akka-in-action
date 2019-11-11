@@ -32,9 +32,7 @@ object ImageProcessing {
     createPhotoString(date, speed, " ")
   }
 
-  def createPhotoString(date: Date,
-                        speed: Int,
-                        license: String): String = {
+  def createPhotoString(date: Date, speed: Int, license: String): String = {
     "%s|%s|%s".format(dateFormat.format(date), speed, license)
   }
 }

@@ -14,15 +14,16 @@ import akka.http.scaladsl.model.MediaTypes._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 
-import scala.xml.{ Elem, XML, NodeSeq }
-import akka.http.scaladsl.marshallers.xml.ScalaXmlSupport._ 
+import scala.xml.{Elem, XML, NodeSeq}
+import akka.http.scaladsl.marshallers.xml.ScalaXmlSupport._
 
 class OrderServiceApi(
-  system: ActorSystem, 
-  timeout: Timeout, 
-  val processOrders: ActorRef
-) extends OrderService {
+                       system: ActorSystem,
+                       timeout: Timeout,
+                       val processOrders: ActorRef
+                     ) extends OrderService {
   implicit val requestTimeout = timeout
+
   implicit def executionContext = system.dispatcher
 }
 
@@ -37,23 +38,25 @@ trait OrderService {
   val routes = getOrder ~ postOrders
 
 
-
   def getOrder = get {
     pathPrefix("orders" / IntNumber) { id =>
       onSuccess(processOrders.ask(OrderId(id))) {
         case result: TrackingOrder =>
           complete(<statusResponse>
-            <id>{ result.id }</id>
-            <status>{ result.status }</status>
+            <id>
+              {result.id}
+            </id>
+            <status>
+              {result.status}
+            </status>
           </statusResponse>)
-        
-        case result: NoSuchOrder => 
+
+        case result: NoSuchOrder =>
           complete(StatusCodes.NotFound)
       }
     }
   }
 
-  
 
   def postOrders = post {
     path("orders") {
@@ -63,18 +66,21 @@ trait OrderService {
           case result: TrackingOrder =>
             complete(
               <confirm>
-                <id>{ result.id }</id>
-                <status>{ result.status }</status>
+                <id>
+                  {result.id}
+                </id>
+                <status>
+                  {result.status}
+                </status>
               </confirm>
             )
-        
+
           case result =>
             complete(StatusCodes.BadRequest)
         }
       }
     }
-  }  
-
+  }
 
 
   def toOrder(xml: NodeSeq): Order = {

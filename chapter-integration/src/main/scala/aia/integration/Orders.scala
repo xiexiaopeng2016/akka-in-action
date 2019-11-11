@@ -1,8 +1,8 @@
 package aia.integration
 
-import akka.camel.{ Producer, CamelMessage, Consumer }
+import akka.camel.{Producer, CamelMessage, Consumer}
 import akka.actor.ActorRef
-import net.liftweb.json.{ Serialization, DefaultFormats }
+import net.liftweb.json.{Serialization, DefaultFormats}
 import xml.XML
 import scala.concurrent.duration._
 
@@ -46,7 +46,6 @@ class OrderConsumerXml(uri: String, next: ActorRef)
 }
 
 
-
 class OrderConfirmConsumerXml(uri: String, next: ActorRef)
   extends Consumer {
 
@@ -72,7 +71,6 @@ class OrderConfirmConsumerXml(uri: String, next: ActorRef)
 }
 
 
-
 class SimpleProducer(uri: String) extends Producer {
   def endpointUri = uri
 }
@@ -80,35 +78,49 @@ class SimpleProducer(uri: String) extends Producer {
 
 class OrderProducerXml(uri: String) extends Producer {
   def endpointUri = uri
+
   override def oneway: Boolean = true
 
   override protected def transformOutgoingMessage(message: Any): Any =
     message match {
       case msg: Order => {
         val xml = <order>
-                    <customerId>{ msg.customerId }</customerId>
-                    <productId>{ msg.productId }</productId>
-                    <number>{ msg.number }</number>
-                  </order>
+          <customerId>
+            {msg.customerId}
+          </customerId>
+          <productId>
+            {msg.productId}
+          </productId>
+          <number>
+            {msg.number}
+          </number>
+        </order>
         xml.toString().replace("\n", "")
       }
       case other => message
     }
-} 
+}
 
 
 class OrderConfirmProducerXml(uri: String) extends Producer {
   def endpointUri = uri
+
   override def oneway: Boolean = false
 
   override def transformOutgoingMessage(message: Any): Any =
     message match {
       case msg: Order => {
         val xml = <order>
-                    <customerId>{ msg.customerId }</customerId>
-                    <productId>{ msg.productId }</productId>
-                    <number>{ msg.number }</number>
-                  </order>
+          <customerId>
+            {msg.customerId}
+          </customerId>
+          <productId>
+            {msg.productId}
+          </productId>
+          <number>
+            {msg.number}
+          </number>
+        </order>
         xml.toString().replace("\n", "") + "\n"
       }
       case other => message

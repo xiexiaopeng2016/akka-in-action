@@ -1,10 +1,10 @@
 package aia.integration
 
-import akka.actor.{ Actor, ActorRef }
-import akka.camel.{ CamelMessage, Consumer }
+import akka.actor.{Actor, ActorRef}
+import akka.camel.{CamelMessage, Consumer}
 import xml.XML
 import org.apache.camel.Exchange
-import util.{ Failure, Success }
+import util.{Failure, Success}
 import collection.mutable
 import akka.pattern.ask
 import akka.util.Timeout
@@ -13,9 +13,10 @@ import concurrent.ExecutionContext
 
 
 case class TrackingOrder(id: Long, status: String, order: Order)
-case class OrderId(id: Long)
-case class NoSuchOrder(id: Long)
 
+case class OrderId(id: Long)
+
+case class NoSuchOrder(id: Long)
 
 
 class ProcessOrders extends Actor {
@@ -91,7 +92,6 @@ class OrderConsumerRest(uri: String, next: ActorRef)
   }
 
 
-
   def processOrder(content: String): Unit = {
     implicit val timeout: Timeout = 1 second
     implicit val ExecutionContext = context.system.dispatcher
@@ -105,22 +105,30 @@ class OrderConsumerRest(uri: String, next: ActorRef)
     askFuture.onComplete {
       case Success(result: TrackingOrder) => {
         val response = <confirm>
-                         <id>{ result.id }</id>
-                         <status>{ result.status }</status>
-                       </confirm>
+          <id>
+            {result.id}
+          </id>
+          <status>
+            {result.status}
+          </status>
+        </confirm>
         sendResultTo ! CamelMessage(response.toString(), headers)
       }
       case Success(result) => {
         val response =
           <confirm>
-            <status>ID is unknown { result.toString() }</status>
+            <status>ID is unknown
+              {result.toString()}
+            </status>
           </confirm>
         sendResultTo ! CamelMessage(response.toString(), headers)
       }
       case Failure(ex) =>
         val response =
           <confirm>
-            <status>System Failure { ex.getMessage }</status>
+            <status>System Failure
+              {ex.getMessage}
+            </status>
           </confirm>
         sendResultTo ! CamelMessage(response.toString(), headers)
     }
@@ -141,29 +149,39 @@ class OrderConsumerRest(uri: String, next: ActorRef)
     askFuture.onComplete {
       case Success(result: TrackingOrder) => {
         val response = <statusResponse>
-                         <id>{ result.id }</id>
-                         <status>{ result.status }</status>
-                       </statusResponse>
+          <id>
+            {result.id}
+          </id>
+          <status>
+            {result.status}
+          </status>
+        </statusResponse>
         sendResultTo ! CamelMessage(response.toString(), headers)
       }
       case Success(result: NoSuchOrder) => {
         val response = <statusResponse>
-                         <id>{ result.id }</id>
-                         <status>ID is unknown</status>
-                       </statusResponse>
+          <id>
+            {result.id}
+          </id>
+          <status>ID is unknown</status>
+        </statusResponse>
         sendResultTo ! CamelMessage(response.toString(), headers)
       }
       case Success(result) => {
         val response =
           <statusResponse>
-            <status>Response is unknown { result.toString() }</status>
+            <status>Response is unknown
+              {result.toString()}
+            </status>
           </statusResponse>
         sendResultTo ! CamelMessage(response.toString(), headers)
       }
       case Failure(ex) =>
         val response =
           <statusResponse>
-            <status>System Failure { ex.getMessage }</status>
+            <status>System Failure
+              {ex.getMessage}
+            </status>
           </statusResponse>
         sendResultTo ! CamelMessage(response.toString(), headers)
     }

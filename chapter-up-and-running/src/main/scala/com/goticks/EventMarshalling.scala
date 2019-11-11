@@ -13,7 +13,8 @@ case class TicketRequest(tickets: Int) {
 case class Error(message: String)
 
 
-trait EventMarshalling  extends DefaultJsonProtocol {
+trait EventMarshalling extends DefaultJsonProtocol {
+
   import BoxOffice._
 
   implicit val eventDescriptionFormat = jsonFormat1(EventDescription)

@@ -24,4 +24,6 @@ Forcing a push can be done by nesting commands as well:
 
 The above pushes the changes in local master to heroku master.
 
+http POST localhost:5000/events/RHCP tickets:=10
+
 
