@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CommentService">
+    <file url="file://$PROJECT_DIR$/chapter-testdriven/src/test/scala/aia/testdriven/SilentActorNextTest.scala">
+      <comment text="testActorRef 用于测试 Actor 内部状态的改变" start_offset="457" author="谢小朋" create_time="2019年7月23日 22:15:26" />
+      <comment text="SilentActor&#10;不返回，不发送message。我们要测试它是否接受到了message,知否改变了内部状态，是否抛出异常。&#10;对于单线程环境，我们用TestActorRef就可以。多线程环境我们还是要用testActor。" start_offset="457" author="谢小朋" create_time="2019年7月23日 22:21:1" />
+      <comment text="actor是不能直接访问的，所以使用TestActorRef允许我们直接访问silentActor内部" start_offset="457" author="谢小朋" create_time="2019年7月24日 10:42:48" />
+      <comment text="直接调用silentActor的内部状态，也可以直接调用内部方法" start_offset="652" author="谢小朋" create_time="2019年7月24日 10:44:15" />
+      <comment text="导入消息" start_offset="427" author="谢小朋" create_time="2019年7月24日 11:10:36" />
+      <comment text="为单线程测试创建TestActorRef" start_offset="457" author="谢小朋" create_time="2019年7月24日 11:11:14" />
+      <comment text="获取底层actor, 并检查其状态" start_offset="652" author="谢小朋" create_time="2019年7月24日 11:12:0" />
+      <comment text="伴生对象保持相互关联的消息" start_offset="591" author="谢小朋" create_time="2019年7月24日 11:22:16" />
+      <comment text="能够处理的消息类型" start_offset="765" author="谢小朋" create_time="2019年7月24日 11:22:43" />
+      <comment text="状态保存在向量中, 每条消息报都添加到这个向量中" start_offset="1018" author="谢小朋" create_time="2019年7月24日 11:24:20" />
+      <comment text="返回构建好的向量的状态的方法" start_offset="1071" author="谢小朋" create_time="2019年7月24日 11:25:3" />
+      <comment text="单线程版本" start_offset="157" author="谢小朋" create_time="2019年7月24日 11:27:11" />
+      <comment text="多线程版本" start_offset="1109" author="谢小朋" create_time="2019年7月24日 11:27:32" />
+      <comment text="伴生对象保持相关的消息" start_offset="1378" author="谢小朋" create_time="2019年7月24日 11:28:49" />
+      <comment text="测试系统用于创建actor" start_offset="1408" author="谢小朋" create_time="2019年7月24日 11:33:55" />
+      <comment text="消息被添加到伴生对象以获得状态" start_offset="1571" author="谢小朋" create_time="2019年7月24日 11:34:53" />
+      <comment text="用于检查向testActor发送了什么消息" start_offset="1613" author="谢小朋" create_time="2019年7月24日 11:36:8" />
+      <comment text="Props对象描述了actor应该如何创建" start_offset="1408" author="谢小朋" create_time="2019年7月24日 11:51:48" />
+      <comment text="创建Props的最简单方式是以它要创建的的Actor作为参数进行创建, 在本例中写做Props[SilentActor]. 以这种方式创建的Props最终以它默认构造方法创建Actor" start_offset="1408" author="谢小朋" create_time="2019年7月24日 12:0:3" />
+      <comment text="为了测试的目的, 添加GetState消息" start_offset="1753" author="谢小朋" create_time="2019年7月24日 15:40:18" />
+      <comment text="在GetState消息中, 将内部状态发送给ActorRef" start_offset="2008" author="谢小朋" create_time="2019年7月24日 15:41:15" />
+      <comment text="Vector是一个容器，即保存其他对象的对象。容器也称为集合。Vector是标准Scala包的一部分，不需要任何导入就可以使用。" start_offset="1866" author="谢小朋" create_time="2019年7月24日 15:50:2" />
+      <comment text="发出一个SilentMessage消息" start_offset="1475" author="谢小朋" create_time="2019年7月24日 15:57:31" />
+      <comment text="再发出一个SilentMessage消息" start_offset="1523" author="谢小朋" create_time="2019年7月24日 15:57:46" />
+      <comment text="发送一条SilentMessage消息" start_offset="509" author="谢小朋" create_time="2019年7月24日 16:32:37" />
+      <comment text="Vector(&quot;whisper&quot;)" start_offset="652" author="谢小朋" create_time="2019年7月24日 16:36:11" />
+      <comment text="接收到消息后, 保存到internalState对象中" start_offset="1018" author="谢小朋" create_time="2019年7月24日 16:46:46" />
+      <comment text="好像没起作用" start_offset="809" author="谢小朋" create_time="2019年7月24日 16:49:40" />
+    </file>
+    <file url="file://$PROJECT_DIR$/chapter-testdriven/src/test/scala/aia/testdriven/SendingActorTest.scala">
+      <comment text="SendingActor&#10;会发送message给其他的actor,一般我们测试将其作为黑盒.使用testActor接受消息，并使用expectMsg或者expectMsgPF从testActor获取从被测试actor收到的message。" start_offset="186" author="谢小朋" create_time="2019年7月23日 22:29:55" />
+      <comment text="接受者被传递给props方法, 用于创建Props, 在测试中传递testActor" start_offset="451" author="谢小朋" create_time="2019年7月24日 18:0:15" />
+      <comment text="随机无序的活动列表被创建" start_offset="740" author="谢小朋" create_time="2019年7月24日 18:1:20" />
+      <comment text="testActor应该收到一个活动排序好的Vector" start_offset="875" author="谢小朋" create_time="2019年7月24日 18:2:37" />
+      <comment text="sortEvents消息被发送给sendingActor" start_offset="820" author="谢小朋" create_time="2019年7月24日 18:3:57" />
+      <comment text="SendingActor把这些活动排序" start_offset="1375" author="谢小朋" create_time="2019年7月24日 18:5:0" />
+      <comment text="并发送SortedEvents消息给接收者" start_offset="1375" author="谢小朋" create_time="2019年7月24日 18:5:36" />
+    </file>
+    <file url="file://$PROJECT_DIR$/chapter-testdriven/src/test/scala/aia/testdriven/SilentActor01Test.scala">
+      <comment text="从TestKit继承,提供测试用的Actor系统" start_offset="204" author="谢小朋" create_time="2019年7月24日 10:30:38" />
+      <comment text="以BDD风格为测试提供易读的DSL" start_offset="271" author="谢小朋" create_time="2019年7月24日 10:31:29" />
+      <comment text="提供易于阅读的断言" start_offset="291" author="谢小朋" create_time="2019年7月24日 10:31:53" />
+      <comment text="确保所有的测试结束后, 系统停止运行" start_offset="311" author="谢小朋" create_time="2019年7月24日 10:32:30" />
+      <comment text="测试的文本规范" start_offset="423" author="谢小朋" create_time="2019年7月24日 10:39:17" />
+      <comment text="每个in内是具体的测试内容" start_offset="452" author="谢小朋" create_time="2019年7月24日 10:39:33" />
+      <comment text="忽略, 不测试" start_offset="778" author="谢小朋" create_time="2019年7月24日 10:52:40" />
+      <comment text="接收任何消息, 无任何状态改变" start_offset="1133" author="谢小朋" create_time="2019年7月24日 11:8:3" />
+    </file>
+    <file url="file://$PROJECT_DIR$/chapter-testdriven/src/test/scala/aia/testdriven/FilteringActorTest.scala">
+      <comment text="List(1, 2, 3, 4, 5)" start_offset="805" author="谢小朋" create_time="2019年7月25日 0:0:39" />
+    </file>
+    <file url="file://$PROJECT_DIR$/chapter-testdriven/src/test/scala/aia/testdriven/Greeter01Test.scala">
+      <comment text="拦截日志消息" start_offset="629" author="谢小朋" create_time="2019年7月25日 0:28:58" />
+      <comment text="从包含测试事件监听器的配置中创建系统" start_offset="750" author="谢小朋" create_time="2019年7月25日 0:29:55" />
+    </file>
+    <file url="file://$PROJECT_DIR$/chapter-testdriven/src/test/scala/aia/testdriven/Greeter02Test.scala">
+      <comment text="打印它收到的问候语" start_offset="1109" author="谢小朋" create_time="2019年7月25日 0:32:23" />
+    </file>
+    <file url="file://$PROJECT_DIR$/chapter-testdriven/src/test/scala/aia/testdriven/EchoActorTest.scala">
+      <comment text="不论收到什么, 只是简单的发送回(隐式)发送者" start_offset="1194" author="谢小朋" create_time="2019年7月25日 1:20:50" />
+    </file>
+    <file url="file://$PROJECT_DIR$/chapter-futures/src/main/scala/com/goticks/TicketInfoService.scala">
+      <comment text="Scala Trait(特征) 相当于 Java 的接口，实际上它比接口还功能强大。&#10;&#10;与接口不同的是，它还可以定义属性和方法的实现。&#10;&#10;一般情况下Scala的类只能够继承单一父类，但是如果是 Trait(特征) 的话就可以继承多个，从结果来看就是实现了多重继承。" start_offset="226" author="谢小朋" create_time="2019年7月25日 13:48:31" />
+      <comment text="getTicketInfo 异步请求, 返回Future" start_offset="776" author="谢小朋" create_time="2019年7月25日 14:53:42" />
+      <comment text="天气服务X" start_offset="5744" author="谢小朋" create_time="2019年7月25日 16:12:49" />
+      <comment text="天气服务Y" start_offset="5820" author="谢小朋" create_time="2019年7月25日 16:13:1" />
+      <comment text="和X是竞争关系, 使用的是响应最快的那个" start_offset="5820" author="谢小朋" create_time="2019年7月25日 16:14:7" />
+      <comment text="交通建议信息" start_offset="1083" author="谢小朋" create_time="2019年7月25日 16:19:57" />
+      <comment text="天气信息" start_offset="1037" author="谢小朋" create_time="2019年7月25日 16:20:18" />
+      <comment text="获取交通信息" start_offset="1863" author="谢小朋" create_time="2019年7月25日 16:28:6" />
+      <comment text="recover 允许在上游发生故障时向下游发送最后一个元素。" start_offset="915" author="谢小朋" create_time="2019年7月25日 17:50:8" />
+      <comment text="https://doc.akka.io/docs/akka/current/stream/operators/Source-or-Flow/recover.html" start_offset="915" author="谢小朋" create_time="2019年7月25日 17:50:55" />
+      <comment text="对多个Future返回的结果进行处理" start_offset="1004" author="谢小朋" create_time="2019年7月25日 18:7:35" />
+      <comment text="map 通过使用它调用映射函数并将返回的值传递给下游来转换流中的每个元素" start_offset="3915" author="谢小朋" create_time="2019年7月25日 18:14:19" />
+      <comment text="可以使用 getOrElse() 方法来获取元组中存在的元素或者使用其默认的值" start_offset="1179" author="谢小朋" create_time="2019年7月25日 18:23:52" />
+    </file>
+    <file url="file://$PROJECT_DIR$/chapter-futures/src/test/scala/com/goticks/GetTicketInfoSpec.scala">
+      <comment text="实例化" start_offset="1432" author="谢小朋" create_time="2019年7月25日 17:7:0" />
+      <comment text="https://www.runoob.com/scala/scala-options.html" start_offset="1709" author="谢小朋" create_time="2019年7月25日 18:28:51" />
+      <comment text="调用艺术家日程服务" start_offset="2633" author="谢小朋" create_time="2019年7月25日 18:40:47" />
+      <comment text="MockWebServer是一个可脚本化的用于测试HTTP客户端的Web服务器。&#10;主要用于测试你的应用在进行HTTP、HTTPS请求时是否按照预期的行为动作。使用该工具，你可以验证应用的请求是否符合预期，你可以选择返回的响应。" start_offset="1149" author="谢小朋" create_time="2019年7月26日 9:34:20" />
+    </file>
+    <file url="file://$PROJECT_DIR$/chapter-futures/src/main/scala/com/goticks/TicketInfo.scala">
+      <comment text="天气: 温度, 降雨" start_offset="1050" author="谢小朋" create_time="2019年7月25日 18:37:9" />
+      <comment text="艺术家: 姓名, 日历uri" start_offset="445" author="谢小朋" create_time="2019年7月25日 18:40:1" />
+      <comment text="事件: 人物, 地点, 时间" start_offset="377" author="谢小朋" create_time="2019年7月25日 18:42:35" />
+    </file>
+    <file url="file://$PROJECT_DIR$/chapter-persistence/src/main/scala/aia/persistence/calculator/Calculator.scala">
+      <comment text="发送命令" start_offset="1157" author="谢小朋" create_time="2019年10月7日 16:6:52" />
+      <comment text="defpersist[A](event: A)(handler: (A) ⇒ Unit): Unit&#10;异步持久化事件成功持久化时，将使用持久化事件调用处理程序保证在调用persist和执行其处理程序之间，persistent参与者不会接收到新的命令对于每个接收到的命令，这也适用于多个持久化调用在内部，这是通过保存新命令并在事件被持久化和处理时取消对它们的保存来实现的用于此目的的存储是一个内部存储，不会干扰继承的用户存储。&#10;&#10;事件处理程序可以关闭并修改持久参与者状态持久化事件的发送者是相应命令的发送者这意味着可以在事件处理程序中回复命令发送者。&#10;&#10;在事件处理程序中，应用程序通常使用持久化事件数据更新持久化参与者状态、通知侦听器和回复命令发送者。&#10;&#10;如果事件的持久性失败，将调用#onPersistFailure，并无条件停止参与者持久化失败时无法恢复的原因是，不知道事件是否实际持久化，因此处于不一致状态无论如何，在持久性故障时重新启动很可能会失败，因为日志可能不可用最好是让演员停下来，在暂停后再重新开始。&#10;&#10;event event to be persisted&#10;handler handler for each persisted event" start_offset="1533" author="谢小朋" create_time="2019年10月7日 16:23:43" />
+      <comment text="PersistentActor,任何一个需要持久化的Actor都必须继承它，并必须定义或者实现其中的三个关键属性：" start_offset="1157" author="谢小朋" create_time="2019年10月7日 21:8:46" />
+      <comment text="def persistenceId = &quot;example&quot; //作为持久化Actor的唯一表示，用于持久化或者查询时使用&#10;&#10;def receiveCommand: Receive = ??? //Actor正常运行时处理处理消息逻辑，可在这部分内容里持久化自己想要的消息&#10;&#10;def receiveRecover: Receive = ??? //Actor重启恢复是执行的逻辑" start_offset="1157" author="谢小朋" create_time="2019年10月7日 21:9:52" />
+    </file>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8.0_191" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/classes" />
+  </component>
+</project>
